@@ -1,28 +1,41 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div>
+    <div>{{ firstNumber }}</div>
+    <div>
+      <button @click="press('1')">1</button>
+      <button @click="press('2')">2</button>
+      <button @click="press('3')">3</button>
+    </div>
+    <div>
+      <button @click="press('4')">4</button>
+      <button @click="press('5')">5</button>
+      <button @click="press('6')">6</button>
+    </div>
+    <div>
+      <button @click="press('7')">7</button>
+      <button @click="press('8')">8</button>
+      <button @click="press('9')">9</button>
+    </div>
+    <div>
+      <button @click="press('.')">.</button>
+      <button @click="press('0')">0</button>
+      <button @click="press('C')">C</button>
+    </div>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
 export default {
   name: 'App',
-  components: {
-    HelloWorld
+  data () {
+    return {
+      firstNumber: ''
+    }
+  },
+  methods: {
+    press (a) {
+      this.firstNumber += a
+    }
   }
 }
 </script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
