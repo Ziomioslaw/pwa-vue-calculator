@@ -17,7 +17,7 @@
       <button @click="pressedDigit('9')">9</button>
     </div>
     <div>
-      <button @click="pressedDot('.')">.</button>
+      <button @click="pressedDot()">.</button>
       <button @click="pressedDigit('0')">0</button>
       <button @click="pressedClear()">C</button>
     </div>
@@ -158,6 +158,7 @@ export default {
         return
       }
 
+      this.currentInput += '.'
       this.mode = this.mode.introduceNumber(+this.currentInput)
       this.display = this.currentInput
     },
@@ -182,15 +183,14 @@ export default {
     },
 
     pressedCalculate: function () {
-      this.mode = this.mode.pressedCalculate()
       this.currentInput = '0'
+      this.mode = this.mode.pressedCalculate()
       this.display = this.mode.getDisplay()
     },
 
     pressedOperation (operation) {
       this.mode = this.mode.pressedOperation(operation)
       this.currentInput = '0'
-      this.display = '0'
     }
   }
 }
