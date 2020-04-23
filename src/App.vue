@@ -43,7 +43,7 @@ const calculate = function (firstNumber, secondNumber, currentOperation) {
 
     case '/':
       if (secondNumber === 0) {
-        return 'div by zero'
+        throw new Error('div by zero')
       }
 
       return firstNumber / secondNumber
@@ -52,7 +52,7 @@ const calculate = function (firstNumber, secondNumber, currentOperation) {
       return firstNumber * secondNumber
   }
 
-  return 'Unknown operation'
+  throw new Error('Unknown operation')
 }
 
 const FirstNumberMode = function (firstNumber, secondNumber, currentOperation) {
@@ -98,10 +98,18 @@ const SecondNumberMode = function (firstNumber, secondNumber, currentOperation) 
       return new SecondNumberMode(firstNumber, newValue, currentOperation)
     },
     pressedOperation: function (operation) {
-      return new SecondNumberMode(calculate(firstNumber, secondNumber, currentOperation), null, operation)
+      try {
+        return new SecondNumberMode(calculate(firstNumber, secondNumber, currentOperation), null, operation)
+      } catch (exception) {
+        return new ErrorMode(exception.message, null, null)
+      }
     },
     pressedCalculate: function () {
-      return new ResultMode(calculate(firstNumber, secondNumber, currentOperation), null, null)
+      try {
+        return new ResultMode(calculate(firstNumber, secondNumber, currentOperation), null, null)
+      } catch (exception) {
+        return new ErrorMode(exception.message, null, null)
+      }
     },
     getDisplay: function () {
       return secondNumber
@@ -117,6 +125,24 @@ const ResultMode = function (firstNumber, secondNumber, currentOperation) {
     },
     pressedOperation: function (operation) {
       return new SecondNumberMode(firstNumber, null, operation)
+    },
+    pressedCalculate: function () {
+      return this
+    },
+    getDisplay: function () {
+      return firstNumber
+    }
+  }
+}
+
+const ErrorMode = function (firstNumber, secondNumber, currentOperation) {
+  console.log('ErrorMode', firstNumber, secondNumber, currentOperation)
+  return {
+    introduceNumber: function (newValue) {
+      return new FirstNumberMode(newValue, null, null)
+    },
+    pressedOperation: function (operation) {
+      return this
     },
     pressedCalculate: function () {
       return this
