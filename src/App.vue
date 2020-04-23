@@ -33,92 +33,164 @@
 </template>
 
 <script>
+const calculate = function (firstNumber, secondNumber, currentOperation) {
+  switch (currentOperation) {
+    case '+':
+      return firstNumber + secondNumber
+
+    case '-':
+      return firstNumber - secondNumber
+
+    case '/':
+      if (secondNumber === 0) {
+        return 'div by zero'
+      }
+
+      return firstNumber / secondNumber
+
+    case '*':
+      return firstNumber * secondNumber
+  }
+
+  return 'Unknown operation'
+}
+
+const FirstNumberMode = function (firstNumber, secondNumber, currentOperation) {
+  console.log('FirstNumberMode', firstNumber, secondNumber, currentOperation)
+  return {
+    introduceNumber: function (newValue) {
+      return new FirstNumberMode(newValue, null, null)
+    },
+    pressedOperation: function (operation) {
+      return new SelectOperationMode(firstNumber, null, operation)
+    },
+    pressedCalculate: function () {
+      return this
+    },
+    getDisplay: function () {
+      return firstNumber
+    }
+  }
+}
+
+const SelectOperationMode = function (firstNumber, secondNumber, currentOperation) {
+  console.log('SelectOperationMode', firstNumber, secondNumber, currentOperation)
+  return {
+    introduceNumber: function (newValue) {
+      return new SecondNumberMode(firstNumber, newValue, currentOperation)
+    },
+    pressedOperation: function (operation) {
+      return new SelectOperationMode(firstNumber, secondNumber, operation)
+    },
+    pressedCalculate: function () {
+      return this
+    },
+    getDisplay: function () {
+      return firstNumber
+    }
+  }
+}
+
+const SecondNumberMode = function (firstNumber, secondNumber, currentOperation) {
+  console.log('SecondNumberMode', firstNumber, secondNumber, currentOperation)
+  return {
+    introduceNumber: function (newValue) {
+      return new SecondNumberMode(firstNumber, newValue, currentOperation)
+    },
+    pressedOperation: function (operation) {
+      return new SecondNumberMode(calculate(firstNumber, secondNumber, currentOperation), null, operation)
+    },
+    pressedCalculate: function () {
+      return new ResultMode(calculate(firstNumber, secondNumber, currentOperation), null, null)
+    },
+    getDisplay: function () {
+      return secondNumber
+    }
+  }
+}
+
+const ResultMode = function (firstNumber, secondNumber, currentOperation) {
+  console.log('ResultMode', firstNumber, secondNumber, currentOperation)
+  return {
+    introduceNumber: function (newValue) {
+      return new FirstNumberMode(newValue, null, null)
+    },
+    pressedOperation: function (operation) {
+      return new SecondNumberMode(firstNumber, null, operation)
+    },
+    pressedCalculate: function () {
+      return this
+    },
+    getDisplay: function () {
+      return firstNumber
+    }
+  }
+}
+
 export default {
   name: 'App',
-  data () {
+  data: function () {
     return {
-      currentResult: 0,
-      currentOperation: '+',
-      currentNumber: '',
+      mode: new FirstNumberMode(0, null, null),
+      currentInput: '0',
       display: '0'
     }
   },
   methods: {
-    calculate () {
-      const value = +this.currentNumber
-      this.currentNumber = ''
-
-      switch (this.currentOperation) {
-        case '+':
-          this.currentResult += value
-          break
-
-        case '-':
-          this.currentResult -= value
-          break
-
-        case '/':
-          if (value === 0) {
-            this.pressedClear()
-            this.display = 'div by zero'
-            return
-          }
-
-          this.currentResult /= value
-          break
-
-        case '*':
-          this.currentResult *= value
-          break
+    pressedDigit: function (character) {
+      if (this.currentInput === '0') {
+        this.currentInput = character
+      } else {
+        this.currentInput += character
       }
+
+      this.mode = this.mode.introduceNumber(+this.currentInput)
+      this.display = this.currentInput
     },
-    pressedOperation (operation) {
-      this.calculate()
-      this.currentOperation = operation
-      this.display = this.currentResult
+
+    pressedDot: function () {
+      if (this.currentInput === '') {
+        this.currentInput = '0.'
+        return
+      }
+
+      if (this.currentInput.indexOf('.') > -1) {
+        return
+      }
+
+      this.mode = this.mode.introduceNumber(+this.currentInput)
+      this.display = this.currentInput
     },
-    pressedCalculate () {
-      this.calculate()
-      this.display = this.currentResult
+
+    pressedClear: function () {
+      this.mode = new FirstNumberMode(0, null, null)
+      this.currentInput = '0'
+      this.display = this.currentInput
     },
-    pressedClear () {
-      this.display = '0'
-      this.currentResult = 0
-      this.currentOperation = '+'
-      this.currentNumber = ''
-    },
-    pressedBackspace () {
-      const len = this.currentNumber.length
+
+    pressedBackspace: function () {
+      const len = this.currentInput.length
 
       if (len > 1) {
-        this.currentNumber = this.currentNumber.substring(0, len - 1)
+        this.currentInput = this.currentInput.substring(0, len - 1)
       } else if (len <= 1) {
-        this.currentNumber = '0'
+        this.currentInput = '0'
       }
 
-      this.display = this.currentNumber
+      this.mode = this.mode.introduceNumber(+this.currentInput)
+      this.display = this.currentInput
     },
-    pressedDigit (character) {
-      if ((this.currentNumber === '0') || (character === '0' && this.currentNumber === '0')) {
-        this.currentNumber = character
-      } else {
-        this.currentNumber += character
-      }
 
-      this.display = this.currentNumber
+    pressedCalculate: function () {
+      this.mode = this.mode.pressedCalculate()
+      this.currentInput = '0'
+      this.display = this.mode.getDisplay()
     },
-    pressedDot () {
-      if (this.currentNumber === '') {
-        this.pressedDigit('0')
-        this.pressedDigit('.')
-        return
-      }
 
-      if (this.currentNumber.indexOf('.') > -1) {
-        return
-      }
-
-      this.pressedDigit('.')
+    pressedOperation (operation) {
+      this.mode = this.mode.pressedOperation(operation)
+      this.currentInput = '0'
+      this.display = '0'
     }
   }
 }
