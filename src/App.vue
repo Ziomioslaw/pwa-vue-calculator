@@ -1,34 +1,36 @@
 <template>
-  <div>
-    <div>{{ display }}</div>
-    <div>
-      <button @click="pressedDigit('1')">1</button>
-      <button @click="pressedDigit('2')">2</button>
-      <button @click="pressedDigit('3')">3</button>
+  <div class="root">
+    <div class="display">{{ display }}</div>
+    <div class="numberpad">
+      <div>
+        <button @click="pressedDigit('1')">1</button>
+        <button @click="pressedDigit('2')">2</button>
+        <button @click="pressedDigit('3')">3</button>
+        <button @click="pressedClear()">C</button>
+      </div>
+      <div>
+        <button @click="pressedDigit('4')">4</button>
+        <button @click="pressedDigit('5')">5</button>
+        <button @click="pressedDigit('6')">6</button>
+        <button @click="pressedOperation('-')">-</button>
+      </div>
+      <div>
+        <button @click="pressedDigit('7')">7</button>
+        <button @click="pressedDigit('8')">8</button>
+        <button @click="pressedDigit('9')">9</button>
+        <button @click="pressedOperation('+')">+</button>
+      </div>
+      <div>
+        <button @click="pressedDot()">.</button>
+        <button @click="pressedDigit('0')">0</button>
+        <button @click="pressedOperation('/')">/</button>
+        <button @click="pressedOperation('*')">*</button>
+      </div>
+      <div>
+        <button @click="pressedCalculate('=')">=</button>
+        <button @click="pressedBackspace()">back</button>
+      </div>
     </div>
-    <div>
-      <button @click="pressedDigit('4')">4</button>
-      <button @click="pressedDigit('5')">5</button>
-      <button @click="pressedDigit('6')">6</button>
-    </div>
-    <div>
-      <button @click="pressedDigit('7')">7</button>
-      <button @click="pressedDigit('8')">8</button>
-      <button @click="pressedDigit('9')">9</button>
-    </div>
-    <div>
-      <button @click="pressedDot()">.</button>
-      <button @click="pressedDigit('0')">0</button>
-      <button @click="pressedClear()">C</button>
-    </div>
-    <div>
-      <button @click="pressedOperation('+')">+</button>
-      <button @click="pressedOperation('-')">-</button>
-      <button @click="pressedOperation('*')">*</button>
-      <button @click="pressedOperation('/')">/</button>
-    </div>
-    <button @click="pressedCalculate('=')">=</button>
-    <button @click="pressedBackspace()">back</button>
   </div>
 </template>
 
@@ -221,3 +223,68 @@ export default {
   }
 }
 </script>
+
+<style>
+html {
+  height: 100%;
+  padding: 0;
+  margin: 0;
+}
+body {
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+</style>
+
+<style scoped>
+div.root {
+  height: 100%;
+}
+
+div.display {
+  padding: 0;
+  margin: 0;
+  font-size: 2.4em;
+  text-align: right;
+  height: 11%;
+}
+
+div.numberpad {
+  position: relative;
+  width: 100%;
+  height: 89%;
+}
+
+div.numberpad > div {
+  height: 20%;
+}
+
+button {
+  width: 25%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  background-color: white;
+  border: 1px solid black;
+  font-family: inherit;
+  font-size: 100%;
+  line-height: 1.15;
+  overflow: visible;
+  text-transform: none;
+  -webkit-appearance: button;
+}
+
+button {
+  outline: none !important;
+}
+
+input[type="button"]::-moz-focus-inner {
+  border: 0;
+}
+
+div.numberpad > div:last-child button {
+  width: 50%;
+}
+</style>
