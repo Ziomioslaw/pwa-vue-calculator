@@ -2,7 +2,7 @@
 
 The yet another calculator.
 
-The project is based on [Vue](https://vuejs.org/). It is my approach to this framework. It's also my first approach to [Progressive web application](https://en.wikipedia.org/wiki/Progressive_web_application).
+The project is based on [Vue](https://vuejs.org/). It is my approach to this framework. It's also my first approach to [Progressive Web Application](https://en.wikipedia.org/wiki/Progressive_web_application).
 
 ## Calculator
 
