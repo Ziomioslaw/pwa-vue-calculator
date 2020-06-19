@@ -6,7 +6,7 @@ The project is based on [Vue](https://vuejs.org/). It is my first approach to th
 
 ## Calculator
 
-I wish to create the web version of _classic_ electornic calculator.
+I wish to create the web version of _classic_ electronic calculator.
 I also build this application on request of very excentric person, therefor strange buttons layout.
 
 ### Calculator state machine
